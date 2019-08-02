@@ -12,6 +12,11 @@ class HomeController extends Controller
         return view('home');
     }
 
+    public function info()
+    {
+        return view('info');
+    }
+
     public function getList(Request $request)
     {
         $this->validate($request, [
@@ -28,6 +33,6 @@ class HomeController extends Controller
                 break;
         }
 
-        return response()->json($containers);
+        return view('container-list', compact('containers'));
     }
 }

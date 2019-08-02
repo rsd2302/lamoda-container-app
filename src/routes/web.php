@@ -13,3 +13,4 @@
 
 $router->get('/', 'HomeController@index');
 $router->get('/get-list', 'HomeController@getList');
+$router->get('/info', 'HomeController@info');
