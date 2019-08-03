@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\ContainerGreedyService;
-use App\Services\ContainerEnumerateService;
+use App\Services\ContainerService;
+use App\Services\Decisions\ContainerGreedyService;
+use App\Services\Decisions\ContainerEnumerateService;
 
 class HomeController extends Controller
 {
@@ -21,7 +22,7 @@ class HomeController extends Controller
     public function getList(Request $request)
     {
         $this->validate($request, [
-            'strategy' => 'in:greedy, enumerate',
+            'strategy' => 'in:greedy,enumerate',
         ]);
 
         $strategy = $request->get('strategy', 'enumerate');
@@ -38,6 +39,16 @@ class HomeController extends Controller
                 break;
         }
 
-        return view('container-list', compact('containers'));
+        return view('decision', compact('containers'));
+    }
+
+    public function containers(Request $request)
+    {
+        $serviceUrl = env('CONTAINER_API_URL');
+
+        $service = new ContainerService($serviceUrl);
+        $containers = $service->getAllContainers();
+
+        return view('containers', compact('containers'));
     }
 }

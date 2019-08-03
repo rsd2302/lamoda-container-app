@@ -30,7 +30,7 @@ abstract class BaseContainerService
 	 *
 	 * @return void
 	 */
-	protected function getAllContainers()
+	public function getAllContainers()
 	{
 		$page = 1;
 
