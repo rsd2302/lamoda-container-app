@@ -1,9 +1,9 @@
-@foreach (array_chunk($containers, 2) as $subcontainers)
+@foreach (array_chunk($containers, ceil(count($containers) / 3)) as $subcontainers)
     @php
         $firstItem = true
     @endphp
 
-    <div class="col-md-6 news-grids-left">
+    <div class="col-md-4 news-grids-left">
         @foreach ($subcontainers as $container)
             <div class="news_top {{ $firstItem ? '' : 'mt-5' }}">
                 @php

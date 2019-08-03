@@ -31,15 +31,15 @@ class HomeController extends Controller
         switch ($strategy) {
             case 'greedy':
                 $service = new ContainerGreedyService($serviceUrl);
-                $containers = $service->getList();
+                $searchInfo = $service->getList();
                 break;
             case 'enumerate':
                 $service = new ContainerEnumerateService($serviceUrl);
-                $containers = $service->getList();
+                $searchInfo = $service->getList();
                 break;
         }
 
-        return view('decision', compact('containers'));
+        return view('decision', $searchInfo);
     }
 
     public function containers(Request $request)

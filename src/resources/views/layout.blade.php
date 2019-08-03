@@ -47,7 +47,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 						<ul class="menu">
 							<li class="{{ app('url')->current() == url('/') ? 'active' : '' }}"><a href="/" class="scroll">Главная</a></li>
                             <li class="{{ app('url')->current() == url('/get-list') ? 'active' : '' }} mt-sm-3"><a href="/get-list" class="scroll">Решение</a></li>
-                            <li class="{{ app('url')->current() == url('/containers') ? 'active' : '' }} mt-sm-3"><a href="/containers" class="scroll">Контейнеры</a></li>
+                            <li class="{{ (app('url')->current() == url('/containers') || app('url')->current() == url('/containers/generate')) ? 'active' : '' }} mt-sm-3"><a href="/containers" class="scroll">Контейнеры</a></li>
 							<li class="{{ app('url')->current() == url('/info') ? 'active' : '' }} mt-sm-3"><a href="/info" class="scroll">Информация</a></li>
 							<li class="{{ app('url')->current() == url('/#contacts') ? 'active' : '' }} mt-sm-3"><a href="/#contact" class="scroll">Контакты</a></li>
                         </ul>
