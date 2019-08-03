@@ -14,6 +14,11 @@ services:
         build: .
         environment:
             CONTAINER_API_URL: http://nginx:8082/v1/
+            DB_HOST: mongodb
+            DB_PORT: 21018
+            DB_DATABASE: lamoda-quest
+            DB_USERNAME: root
+            DB_PASSWORD: example
 
     mongodb:
         image: mongo

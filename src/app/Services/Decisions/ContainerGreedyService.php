@@ -1,32 +1,9 @@
 <?php
 
-namespace App\Services;
-
-use GuzzleHttp\Client;
+namespace App\Services\Decisions;
 
 class ContainerGreedyService
 {
-	const DEFAULT_PRODUCTS_COUNT_FOR_SEARCH = 100;
-
-	/**
-	 * Http клиент для обращения к серверу
-	 *
-	 * @var Client
-	 */
-	protected $http;
-
-	/**
-	 * Конструктор
-	 *
-	 * @param string $baseUrl Базовый url для сервиса
-	 */
-	function __construct(string $baseUrl)
-	{
-		$this->http = new Client([
-            'base_uri' => $baseUrl,
-        ]);
-	}
-
 	/**
 	 * Получение списка контейнеров содержащих уникальные товары
 	 *
@@ -40,52 +17,6 @@ class ContainerGreedyService
 		$foundContainers = $this->productsToContainers($productContainerList);
 
 		return $this->getContainersWithSelectedProducts($foundContainers);
-	}
-
-	/**
-	 * Преобразование списка с выбранными контейнерами и товарами
-	 *  в список со всей информацией о контейнере
-	 * Внутри проставляет товарам которые нужно взять из контейнера определенный атрибут
-	 * @param  [type] $foundContainers [description]
-	 * @return [type]                  [description]
-	 */
-	protected function getContainersWithSelectedProducts($foundContainers)
-	{
-		$result = [];
-		foreach ($foundContainers as $containerId => $productIds) {
-            $container = $this->http->request('GET', sprintf('containers/%s', $containerId));
-            $container = json_decode($container->getBody());
-
-            foreach ($container->products as $productOrderId => $product) {
-            	$isSelected = in_array($product->id, $productIds);
-            	$container->products[$productOrderId]->selected = $isSelected;
-            }
-
-        	$result[] = $container;
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Преобразовывает список "продукт-контейнер" в "контейнер-продукты"
-	 *
-	 * @param  array $productContainerList список "продукт-контейнер"
-	 * @return array                       список "контейнер-продукты"
-	 */
-	protected function productsToContainers($productContainerList)
-	{
-        $result = [];
-
-        foreach ($productContainerList as $productId => $containerId) {
-            if (! isset($result[$containerId])) {
-                $result[$containerId] = [];
-            }
-
-            $result[$containerId][] = $productId;
-        }
-
-        return $result;
 	}
 
 	/**
