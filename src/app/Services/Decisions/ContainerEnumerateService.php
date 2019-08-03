@@ -80,7 +80,7 @@ class ContainerEnumerateService extends BaseContainerService
 		$containers = app('db')->table('enumerate-containers')->where('count', '<', count($productIds))->get();
 		foreach ($containers as $container) {
 			if (array_intersect($container['products'], $productIds)) {
-				app('db')->table('enumerate-containers')->where('id', $container->id)->delete();
+				app('db')->table('enumerate-containers')->where('id', $container['id'])->delete();
 			}
 		}
 	}

@@ -14,4 +14,6 @@
 $router->get('/', 'HomeController@index');
 $router->get('/get-list', 'HomeController@getList');
 $router->get('/containers', 'HomeController@containers');
+$router->get('/containers/generate', 'HomeController@getContainersGenerate');
+$router->post('/containers/generate', 'HomeController@postContainersGenerate');
 $router->get('/info', 'HomeController@info');

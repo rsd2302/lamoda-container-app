@@ -51,4 +51,28 @@ class HomeController extends Controller
 
         return view('containers', compact('containers'));
     }
+
+    public function getContainersGenerate()
+    {
+        return view('containers-generate');
+    }
+
+    public function postContainersGenerate(Request $request)
+    {
+        $intValues = [
+            'containers-count' => 'required|integer',
+            'container-products-count' => 'required|integer',
+            'unique-products-count' => 'required|integer',
+        ];
+        $keys = array_keys($intValues);
+
+        $this->validate($request, $intValues);
+
+        $serviceUrl = env('CONTAINER_API_URL');
+
+        $service = new ContainerService($serviceUrl);
+        $containers = $service->recreateRandomContainers(...array_values($request->only($keys)));
+
+        return redirect('/containers');
+    }
 }
