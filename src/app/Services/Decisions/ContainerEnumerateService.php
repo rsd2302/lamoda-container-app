@@ -7,6 +7,20 @@ class ContainerEnumerateService extends BaseContainerService
 	protected $containers;
 
 	/**
+	 * Коичество открытых контейнеров для решения
+	 * Чем меньше, тем лучше. Счетчик уменьшается с каждым лучшим решением
+	 * @var integer
+	 */
+	protected $bestContainersCount = 999999;
+
+	/**
+	 * Коичество найденых для решения
+	 * Чем больше, тем лучше. Счетчик увеличивается с каждым лучшим решением
+	 * @var integer
+	 */
+	protected $bestProductsCount = 0;
+
+	/**
 	 * Получение списка контейнеров содержащих уникальные товары
 	 *
 	 * @param  int $productsCountForSearch Количество товаров для поиска
@@ -94,6 +108,8 @@ class ContainerEnumerateService extends BaseContainerService
 	{
 		$this->containers = app('db')->table('enumerate-containers')->get();
 
+		ini_set('xdebug.max_nesting_level', -1);
+
 		foreach ($this->containers as $id => $container) {
 			$productsMap = $this->recursiveWalk($productsCountForSearch, [], $id);
 		}
@@ -109,11 +125,23 @@ class ContainerEnumerateService extends BaseContainerService
 	 */
 	protected function recursiveWalk(int $needleCount, $map = [], $orderId = 0)	{
 		if (count($map) >= $needleCount || ! isset($this->containers[$orderId])) {
+			$containersCount = count(array_flip($map));
+			$productsCount = count($map);
+
 			$document = [
-				'containers-count' => count(array_flip($map)),
-				'products-count' => count($map),
-				'map' => $map,
+				'containers-count' => $containersCount,
+				'products-count' => $productsCount,
+				'map' => array_sort($map),
 			];
+			$document['hash'] = md5(json_encode($document));
+
+			$this->bestContainersCount = min($this->bestContainersCount, $containersCount);
+			$this->bestProductsCount = max($this->bestProductsCount, $productsCount);
+
+			// Не нужно сохранять одно и то же решение дважды
+			if (app('db')->table('enumerate-decisions')->where('hash', $document['hash'])->count()) {
+				return;
+			}
 
 			$container = app('db')->table('enumerate-decisions')->insert($document);
 			return;
@@ -126,8 +154,31 @@ class ContainerEnumerateService extends BaseContainerService
 				}
 				$map[$productId] = $container['id'];
 			}
+			if (! $this->isNeedToContinueRecursion($map)) {
+				continue;
+			}
 			$this->recursiveWalk($needleCount, $map, ++$orderId);
 		}
+	}
+
+	/**
+	 * Функция проверяет, стоит ли продолжать рекурсию
+	 * Рекурсию не стоит продолжать, если текущее решение проигрывает
+	 *  по количеству открытых контейнеров или по количеству найденых продуктов
+	 *
+	 * @param  array   $map Список "Продукт-Контейнер"
+	 * @return boolean      Решение
+	 */
+	protected function isNeedToContinueRecursion($map)
+	{
+		$containersCount = count(array_flip($map));
+		$productsCount = count($map);
+
+		if ($containersCount >= $this->bestContainersCount && $productsCount <= $this->bestProductsCount) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
