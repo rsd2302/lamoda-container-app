@@ -697,13 +697,14 @@ p.iner {
     border-bottom: 1px solid #dcdcdc;
 }
 ul.social_section_1info li {
-    display: inline-block;
+    display: block;
+    margin-bottom: 10px;
 }
-ul.social_section_1info li a {
+ul.social_section_1info li .icon {
     width: 50px;
     height: 50px;
     text-align: center;
-    display: block;
+    display: inline-block;
     line-height: 47px;
     border-radius: 5px;
     border: 1px solid #484848;
@@ -715,6 +716,9 @@ ul.social_section_1info a {
     font-size: 22px;
 }
 ul.social_section_1info a:hover {
+    color: #666;
+}
+ul.social_section_1info a:hover .icon {
     color: #fff;
 }
 .cpy-right p{
