@@ -28,6 +28,7 @@ class ContainerEnumerateService extends BaseContainerService
 	 */
 	public function getList(int $productsCountForSearch = self::DEFAULT_PRODUCTS_COUNT_FOR_SEARCH)
 	{
+		set_time_limit(-1);
 		$this->clearDatabase();
 		$this->generateUniqueContainers();
 		$this->enumerateContainers($productsCountForSearch);

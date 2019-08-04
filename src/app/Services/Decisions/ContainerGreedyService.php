@@ -2,7 +2,7 @@
 
 namespace App\Services\Decisions;
 
-class ContainerGreedyService
+class ContainerGreedyService extends BaseContainerService
 {
 	/**
 	 * Получение списка контейнеров содержащих уникальные товары
