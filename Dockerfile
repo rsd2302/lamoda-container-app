@@ -20,7 +20,7 @@ RUN mv /app/.production.env /app/.env
 
 RUN cd /app && composer install
 
-RUN cd /app && php artisan queue:work
+RUN cd /app && php artisan queue:work --timeout=99999 &
 
 EXPOSE 9000
 
