@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\ContainerService;
 use App\Services\Decisions\ContainerGreedyService;
 use App\Services\Decisions\ContainerEnumerateService;
+use App\Jobs\EnumerateCalculateJob;
 
 class HomeController extends Controller
 {
@@ -19,25 +20,47 @@ class HomeController extends Controller
         return view('info');
     }
 
-    public function getList(Request $request)
+    public function getDecisionsPage()
+    {
+        $serviceUrl = env('CONTAINER_API_URL');
+        $service = new ContainerEnumerateService($serviceUrl);
+
+        $defaultUniqueProducts = \App\Services\Decisions\ContainerEnumerateService::DEFAULT_PRODUCTS_COUNT_FOR_SEARCH;
+        $calculateInfo = $service->getCalculateInfo();
+
+        return view('decisions', compact('defaultUniqueProducts', 'calculateInfo'));
+    }
+
+    public function postDecisionsCalculate(Request $request)
     {
         $this->validate($request, [
-            'strategy' => 'in:greedy,enumerate',
+            'unique-products-count' => 'integer|required',
         ]);
 
-        $strategy = $request->get('strategy', 'enumerate');
+        $job = new EnumerateCalculateJob(
+            $request->get('unique-products-count')
+        );
+        dispatch($job);
+
+        return redirect('/decisions');
+    }
+
+    public function getDecisionsBest()
+    {
+        $serviceUrl = env('CONTAINER_API_URL');
+        $service = new ContainerEnumerateService($serviceUrl);
+        $searchInfo = $service->getBestDecisionContainers();
+
+        return view('decision', $searchInfo);
+        
+    }
+
+    public function getList(Request $request)
+    {
         $serviceUrl = env('CONTAINER_API_URL');
 
-        switch ($strategy) {
-            case 'greedy':
-                $service = new ContainerGreedyService($serviceUrl);
-                $searchInfo = $service->getList();
-                break;
-            case 'enumerate':
-                $service = new ContainerEnumerateService($serviceUrl);
-                $searchInfo = $service->getList();
-                break;
-        }
+        $service = new ContainerGreedyService($serviceUrl);
+        $searchInfo = $service->getList();
 
         return view('decision', $searchInfo);
     }

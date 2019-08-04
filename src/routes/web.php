@@ -13,6 +13,9 @@
 
 $router->get('/', 'HomeController@index');
 $router->get('/get-list', 'HomeController@getList');
+$router->get('/decisions', 'HomeController@getDecisionsPage');
+$router->post('/decisions/start-calculate', 'HomeController@postDecisionsCalculate');
+$router->get('/decisions/best', 'HomeController@getDecisionsBest');
 $router->get('/containers', 'HomeController@containers');
 $router->get('/containers/generate', 'HomeController@getContainersGenerate');
 $router->post('/containers/generate', 'HomeController@postContainersGenerate');

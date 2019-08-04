@@ -19,6 +19,16 @@ services:
             DB_DATABASE: lamoda-quest
             DB_USERNAME: root
             DB_PASSWORD: example
+            REDIS_HOST: redis
+            REDIS_PASSWORD: null
+            REDIS_PORT: 6380
+
+    redis:
+        image: redis:alpine
+        ports:
+            - 6380:6379
+        image: mongo
+        restart: always
 
     mongodb:
         image: mongo

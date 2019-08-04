@@ -22,7 +22,9 @@ $app = new Laravel\Lumen\Application(
 );
 
 $app->register(Jenssegers\Mongodb\MongodbServiceProvider::class);
-// $app->withFacades();	
+$app->register(Illuminate\Redis\RedisServiceProvider::class);
+$app->configure('database');
+$app->withFacades();	
 
 // $app->withEloquent();
 

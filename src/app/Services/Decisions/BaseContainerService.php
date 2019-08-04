@@ -21,13 +21,15 @@ abstract class BaseContainerService extends BaseService
 	protected function getContainersWithSelectedProducts($foundContainers)
 	{
 		$containers = [];
+		$selectedProducts = [];
 		$productsCount = 0;
 		foreach ($foundContainers as $containerId => $productIds) {
             $container = $this->http->request('GET', sprintf('containers/%s', $containerId));
 	            $container = json_decode($container->getBody());
 
             foreach ($container->products as $productOrderId => $product) {
-            	$isSelected = in_array($product->id, $productIds);
+            	$isSelected = in_array($product->id, $productIds) && ! in_array($product->id, $selectedProducts);
+            	$isSelected && $selectedProducts[] = $product->id;
             	$productsCount += $isSelected ? 1 : 0;
             	$container->products[$productOrderId]->selected = $isSelected;
             }
@@ -51,7 +53,7 @@ abstract class BaseContainerService extends BaseService
 	{
         $result = [];
 
-        foreach ($productContainerList as $productId => $containerId) {
+        foreach ((array)$productContainerList as $productId => $containerId) {
             if (! isset($result[$containerId])) {
                 $result[$containerId] = [];
             }
