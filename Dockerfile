@@ -20,7 +20,7 @@ RUN mv /app/.production.env /app/.env
 
 RUN cd /app && composer install
 
-RUN cd /app && php queue:work
+RUN cd /app && php artisan queue:work
 
 EXPOSE 9000
 
