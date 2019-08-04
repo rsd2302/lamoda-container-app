@@ -6,18 +6,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Lamoda quest</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8" />
-    <script>
-        addEventListener("load", function () {
-            setTimeout(hideURLbar, 0);
-        }, false);
-
-        function hideURLbar() {
-            window.scrollTo(0, 1);
-        }
-    </script>
     <!-- Custom Theme files -->
     <link href="/css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
     <link href="/css/style.css" type="text/css" rel="stylesheet" media="all">
