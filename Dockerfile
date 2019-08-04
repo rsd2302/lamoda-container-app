@@ -23,5 +23,7 @@ RUN cd /app && composer install
 
 EXPOSE 9000
 
-CMD ["php /app/artisan queue:work --timeout=99999 &"]
-CMD ["php-fpm"]
+COPY config/start.sh /usr/local/bin/start
+RUN chmod u+x /usr/local/bin/start
+
+CMD ["/usr/local/bin/start"]

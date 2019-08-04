@@ -9,30 +9,37 @@ services:
             DB_DATABASE: lamoda-quest
             DB_USERNAME: root
             DB_PASSWORD: example
-        depends_on:
-            - mongodb
 
     container-app:
         build: .
         environment:
             CONTAINER_API_URL: http://nginx:8082/v1/
+            CONTAINER_ROLE: app
             DB_HOST: mongodb
             DB_PORT: 27017
             DB_DATABASE: lamoda-quest
             DB_USERNAME: root
             DB_PASSWORD: example
-            REDIS_HOST: redis
-            REDIS_PASSWORD: null
-            REDIS_PORT: 6380
-        depends_on:
-            - mongodb
-            - redis
+            REDIS_HOST: redis-server
+            REDIS_PORT: 6379
 
-    redis:
+    container-app-queue:
+        build: .
+        environment:
+            CONTAINER_API_URL: http://nginx:8082/v1/
+            CONTAINER_ROLE: queue
+            DB_HOST: mongodb
+            DB_PORT: 27017
+            DB_DATABASE: lamoda-quest
+            DB_USERNAME: root
+            DB_PASSWORD: example
+            REDIS_HOST: redis-server
+            REDIS_PORT: 6379
+
+    redis-server:
         image: redis:alpine
         ports:
-            - 6380:6379
-        image: mongo
+            - 6379:6379
         restart: always
 
     mongodb:
