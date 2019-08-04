@@ -5,23 +5,28 @@ services:
         image: rsd23/lamoda-container-api
         environment:
             DB_HOST: mongodb
-            DB_PORT: 21018
+            DB_PORT: 27017
             DB_DATABASE: lamoda-quest
             DB_USERNAME: root
             DB_PASSWORD: example
+        depends_on:
+            - mongodb
 
     container-app:
         build: .
         environment:
             CONTAINER_API_URL: http://nginx:8082/v1/
             DB_HOST: mongodb
-            DB_PORT: 21018
+            DB_PORT: 27017
             DB_DATABASE: lamoda-quest
             DB_USERNAME: root
             DB_PASSWORD: example
             REDIS_HOST: redis
             REDIS_PASSWORD: null
             REDIS_PORT: 6380
+        depends_on:
+            - mongodb
+            - redis
 
     redis:
         image: redis:alpine

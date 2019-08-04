@@ -1,10 +1,10 @@
 # start with the official Composer image and name it
 FROM composer AS composer
 
-FROM php:7.3.7-fpm-alpine3.10
+FROM php:7.3.7-fpm-alpine
 
 RUN apk add --no-cache --update --virtual buildDeps autoconf
-RUN apk --update add gcc make g++ zlib-dev
+RUN apk --update add gcc make g++ zlib-dev openssl-dev
 RUN pecl install mongodb \
 	&& docker-php-ext-enable mongodb
 
@@ -20,8 +20,8 @@ RUN mv /app/.production.env /app/.env
 
 RUN cd /app && composer install
 
-RUN cd /app && php artisan queue:work --timeout=99999 &
 
 EXPOSE 9000
 
+CMD ["php /app/artisan queue:work --timeout=99999 &"]
 CMD ["php-fpm"]
